@@ -17,11 +17,11 @@
             Αυτή η σελίδα δεν υπάρχει ή έχει μεταφερθεί. Κανένα πρόβλημα, ακόμα
             και οι καλύτεροι χάνουν τον δρόμο τους. Πάμε ξανά από την αρχή.
           </p>
-          <a href="./index.html" class="btn__red error__btn"
+          <a href="/" class="btn__red error__btn"
             >ΠΙΣΩ ΣΤΗΝ ΑΡΧΙΚΗ</a
           >
           <a
-            href="./contact.html"
+            href="/contact"
             class="btn__transparency error__btn__transparency"
             >ΕΠΙΚΟΙΝΩΝΗΣΕ ΜΑΖΙ ΜΑΣ</a
           >

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-class HomeController
+use Framework\View;
+
+final class HomeController
 {
     public function index(): void
     {
-        loadView('home');
+        View::render('home');
     }
 }

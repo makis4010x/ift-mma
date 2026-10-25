@@ -27,8 +27,7 @@ final class Router
         $action = $this->routes[strtoupper($method)][$uri] ?? null;
 
         if ($action === null) {
-            http_response_code(404);
-            require basePath('controllers/error/404.php');
+            \App\Controllers\ErrorController::notFound();
             return;
         }
 

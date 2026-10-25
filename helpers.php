@@ -16,14 +16,9 @@ function basePath($path = '') {
  * @param string $name
  * @return void
  */
-function loadView($name) {
-    $viewPath = basePath("views/{$name}.view.php");
-
-    if(file_exists($viewPath)) {
-        require $viewPath;
-    } else {
-        echo "View '{$name} not found!'";
-    }
+function loadView(string $name, array $data = []): void
+{
+    \Framework\View::render($name, $data);
 }
 
 /**
@@ -32,14 +27,9 @@ function loadView($name) {
  * @param string $name
  * @return void
  */
-function loadPartial($name) {
-    $partialPath = basePath("views/partials/{$name}.php");
-
-    if(file_exists($partialPath)) {
-        require $partialPath;
-    } else {
-        echo "Partial '{$name} not found!'";
-    }
+function loadPartial(string $name, array $data = []): void
+{
+    \Framework\View::partial($name, $data);
 }
 
 /**
