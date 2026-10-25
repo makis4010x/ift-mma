@@ -26,11 +26,33 @@ $router->get(
     'PageController@bookPersonalTraining'
 );
 
-// Authentication - temporary legacy controller
-$router->get('/login', 'controllers/login.php');
 
 // Development preview
 $router->get(
     '/admin-preview',
     'controllers/admin-preview.php'
+);
+
+// Admin authentication
+$router->get('/login', 'AuthController@showLogin');
+$router->post('/login', 'AuthController@login');
+$router->post('/logout', 'AuthController@logout');
+
+// Protected admin landing page
+$router->get('/admin', 'AdminController@index');
+
+// Admin management
+$router->get(
+    '/admin/administrators',
+    'AdminAdministratorsController@index'
+);
+
+$router->post(
+    '/admin/administrators',
+    'AdminAdministratorsController@store'
+);
+
+$router->post(
+    '/admin/administrators/{id}/status',
+    'AdminAdministratorsController@changeStatus'
 );
