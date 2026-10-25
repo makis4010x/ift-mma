@@ -6,8 +6,7 @@ use Framework\Database;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
-    $config = require dirname(__DIR__)
-        . '/config/database.local.php';
+    $config = \Framework\Config::get('database');
 
     $db = new Database($config);
 

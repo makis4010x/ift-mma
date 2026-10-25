@@ -2,6 +2,8 @@
 /node_modules
 /config/db.php
 .env
+.env.*
+!.env.example
 .vscode
 .DS_Store
 /config/database.local.php
