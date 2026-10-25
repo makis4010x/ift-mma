@@ -14,7 +14,7 @@
       rel="stylesheet"
     />
     <!-- Custom stylesheet: sidebar, typography, responsive states -->
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
   </head>
   <body class="min-h-screen bg-[#0e0e11] text-zinc-100 antialiased">
     <!-- ================= MOBILE OVERLAY ================= -->
@@ -365,6 +365,6 @@
     </div>
 
     <!-- Admin interactions: sidebar toggle / profile menu -->
-    <script type="module" src="./src/admin.js"></script>
+    <script type="module" src="/src/admin.js"></script>
   </body>
 </html>

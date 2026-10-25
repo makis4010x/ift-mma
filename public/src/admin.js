@@ -3,6 +3,6 @@
    Main JavaScript entry point
 ========================================= */
 
-import adminHeader from "./admin/admin-header.js";
+import adminHeader from "./utils/admin/admin-header.js";
 
 adminHeader();
