@@ -1,0 +1,320 @@
+/* =========================================
+   PERSONAL TRAINING - INFORMATION PAGE
+========================================= */
+
+/* SHARED STYLES */
+
+.personal-hero,
+.personal-about,
+.personal-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.personal-hero__tagline,
+.personal-about__tagline,
+.personal-benefits__tagline,
+.personal-levels__tagline,
+.personal-process__tagline {
+  color: var(--clr-red);
+  font-size: var(--size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.personal-hero__title,
+.personal-about__title,
+.personal-benefits__title,
+.personal-levels__title,
+.personal-process__title {
+  margin-top: 0.5rem;
+  font-size: var(--size-4xl);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.personal-hero__descr,
+.personal-about__descr,
+.personal-benefits__descr,
+.personal-levels__descr,
+.personal-process__descr {
+  margin-top: 1rem;
+  max-width: 38rem;
+  color: var(--clr-text);
+}
+
+.personal-hero__btn,
+.personal-levels__btn {
+  margin-top: 1.5rem;
+}
+
+/* IMAGES */
+
+.personal-hero__media,
+.personal-about__media,
+.personal-levels__media {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--clr-border);
+}
+
+.personal-hero__image,
+.personal-about__image,
+.personal-levels__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* =========================================
+   BENEFITS
+========================================= */
+
+.personal-benefits__header {
+  margin-bottom: 2.5rem;
+}
+
+.personal-benefits__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.personal-benefits__card {
+  padding: 2rem;
+  background-color: #141416;
+  border: 1px solid var(--clr-border);
+  transition: border-color 0.3s;
+}
+
+.personal-benefits__card:hover {
+  border-color: var(--clr-red);
+}
+
+.personal-benefits__number {
+  display: block;
+  margin-bottom: 2rem;
+  color: var(--clr-red);
+  font-size: var(--size-3xl);
+  font-weight: 900;
+}
+
+.personal-benefits__card-title {
+  margin-bottom: 1rem;
+  font-size: var(--size-xl);
+  font-weight: 800;
+}
+
+.personal-benefits__card-descr {
+  color: var(--clr-text);
+  font-size: var(--size-sm);
+}
+
+/* =========================================
+   LEVELS
+========================================= */
+
+.personal-levels__list {
+  margin-top: 2rem;
+  border-top: 1px solid var(--clr-border);
+}
+
+.personal-levels__item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--clr-border);
+  font-size: var(--size-sm);
+  font-weight: 600;
+}
+
+.personal-levels__item-number {
+  color: var(--clr-red);
+  font-weight: 900;
+}
+
+/* =========================================
+   HOW IT WORKS
+========================================= */
+
+.personal-process__header {
+  margin-bottom: 2.5rem;
+}
+
+.personal-process__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.personal-process__step {
+  padding: 2rem;
+  border: 1px solid var(--clr-border);
+  background-color: #141416;
+}
+
+.personal-process__number {
+  display: block;
+  margin-bottom: 2rem;
+  color: var(--clr-red);
+  font-size: var(--size-3xl);
+  font-weight: 900;
+}
+
+.personal-process__step-title {
+  margin-bottom: 1rem;
+  font-size: var(--size-lg);
+  font-weight: 800;
+}
+
+.personal-process__step-descr {
+  color: var(--clr-text);
+  font-size: var(--size-sm);
+}
+
+/* =========================================
+   FINAL CTA
+========================================= */
+
+.personal-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+
+  padding: 3rem 2rem;
+  background-color: var(--clr-red);
+}
+
+.personal-cta__tagline {
+  color: var(--clr-light);
+  font-size: var(--size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.personal-cta__title {
+  margin-top: 0.5rem;
+  max-width: 42rem;
+  font-size: var(--size-3xl);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.personal-cta__descr {
+  margin-top: 1rem;
+  max-width: 35rem;
+  color: var(--clr-light);
+}
+
+.personal-cta__btn {
+  flex-shrink: 0;
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+  font-weight: 800;
+}
+
+/* xs */
+/* @media (min-width: 475px) {} */
+
+/* sm */
+@media (min-width: 640px) {
+  .personal-hero__title,
+  .personal-about__title,
+  .personal-benefits__title,
+  .personal-levels__title,
+  .personal-process__title {
+    font-size: var(--size-5xl);
+  }
+
+  .personal-benefits__grid,
+  .personal-process__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* md */
+@media (min-width: 768px) {
+  .personal-hero,
+  .personal-about,
+  .personal-levels {
+    flex-direction: row;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .personal-hero__content,
+  .personal-hero__media,
+  .personal-about__content,
+  .personal-about__media,
+  .personal-levels__content,
+  .personal-levels__media {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .personal-cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 3rem;
+  }
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  .personal-hero,
+  .personal-about,
+  .personal-levels {
+    gap: 4rem;
+  }
+
+  .personal-hero__title,
+  .personal-about__title,
+  .personal-benefits__title,
+  .personal-levels__title,
+  .personal-process__title {
+    font-size: var(--size-6xl);
+  }
+
+  .personal-benefits__grid,
+  .personal-process__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .personal-cta {
+    padding: 5rem 4rem;
+  }
+
+  .personal-cta__title {
+    font-size: var(--size-4xl);
+  }
+}
+
+/* xl */
+@media (min-width: 1280px) {
+  .personal-hero,
+  .personal-about,
+  .personal-levels {
+    gap: 6rem;
+  }
+
+  .personal-hero__title {
+    font-size: var(--size-7xl);
+  }
+
+  .personal-benefits__card,
+  .personal-process__step {
+    padding: 3rem;
+  }
+
+  .personal-cta {
+    padding: 6rem 5rem;
+  }
+}
+
+/* 2xl */
+/* @media (min-width: 1536px) {} */

@@ -1,0 +1,2 @@
+<?php
+loadView('personal-training');

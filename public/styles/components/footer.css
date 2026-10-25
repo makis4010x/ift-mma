@@ -1,0 +1,138 @@
+.footer__img {
+  display: block;
+  max-width: var(--size-9xl);
+  padding-left: 1rem;
+}
+
+.footer__details {
+  padding-left: 1rem;
+}
+
+.footer__title {
+  font-size: var(--size-lg);
+  margin-top: 1rem;
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.footer__link {
+  text-decoration: none;
+  color: var(--clr-text);
+  font-size: var(--size-sm);
+}
+
+.footer__descr {
+  font-size: var(--size-xs);
+  margin-top: 0.5rem;
+}
+
+.footer__line {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  height: 1px;
+  background-color: var(--clr-text);
+}
+
+.footer__dev-details {
+  padding: 1rem;
+}
+
+.footer__copyright,
+.footer__dev {
+  font-size: var(--size-xs);
+}
+
+.footer__dev {
+  margin-top: 0.5rem;
+}
+
+/* xs */
+@media (min-width: 475px) {
+  .footer__img {
+    margin-inline: auto;
+    padding-left: 0;
+  }
+
+  .footer__details {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .footer__links {
+    align-items: center;
+  }
+
+  .footer__dev-details {
+    text-align: center;
+  }
+}
+
+/* sm */
+@media (min-width: 640px) {
+  .footer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .footer__img {
+    margin: 0;
+  }
+
+  .footer__details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .footer__links {
+    align-items: flex-start;
+  }
+
+  .footer__line,
+  .footer__dev-details {
+    grid-column: 1 / -1;
+  }
+
+  .footer__dev-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .footer__dev {
+    margin-top: 0;
+  }
+}
+
+/* md */
+/* @media (min-width: 768px) {} */
+
+/* lg */
+@media (min-width: 1024px) {
+  .footer {
+    grid-template-columns: 1fr 3fr;
+    column-gap: 3rem;
+  }
+
+  .footer__details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* xl */
+/* @media (min-width: 1280px) {} */
+
+/* 2xl */
+/* @media (min-width: 1536px) {} */

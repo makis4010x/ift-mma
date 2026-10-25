@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Home</h1>
-</body>
-</html>
+<?php loadPartial('head'); ?>
+
+<?php loadPartial('navbar'); ?>
+<main>
+<?php loadPartial('hero'); ?>
+<?php loadPartial('philosophy'); ?>
+<?php loadPartial('schedule'); ?>
+<?php loadPartial('classes'); ?>
+<?php loadPartial('training'); ?>
+<?php loadPartial('inside-fit'); ?>
+<?php loadPartial('personal-training'); ?>
+<?php loadPartial('find-us'); ?>
+</main>
+<?php loadPartial('footer'); ?>

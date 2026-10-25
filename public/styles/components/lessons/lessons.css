@@ -1,0 +1,201 @@
+/* =========================================
+   LESSONS HERO
+========================================= */
+
+.lessons-hero__tagline {
+  color: var(--clr-red);
+  font-size: var(--size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.lessons-hero__title {
+  margin-top: 0.5rem;
+  font-size: var(--size-4xl);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.lessons-hero__descr {
+  margin-top: 1rem;
+  max-width: 38rem;
+  color: var(--clr-text);
+}
+
+/* =========================================
+   LESSON
+========================================= */
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.lesson__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lesson__tagline {
+  color: var(--clr-red);
+  font-size: var(--size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.lesson__title {
+  margin-top: 0.5rem;
+  font-size: var(--size-4xl);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.lesson__descr {
+  margin-top: 1rem;
+  max-width: 35rem;
+  color: var(--clr-text);
+}
+
+.lesson__btn {
+  margin-top: 1.5rem;
+}
+
+/* IMAGE */
+
+.lesson__media {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--clr-border);
+}
+
+.lesson__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.lesson__media:hover .lesson__image {
+  transform: scale(1.05);
+}
+
+/* =========================================
+   CALL TO ACTION
+========================================= */
+
+.lessons-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  padding: 2rem;
+  background-color: var(--clr-red);
+}
+
+.lessons-cta__content {
+  margin: 2rem;
+}
+
+.lessons-cta__tagline {
+  color: var(--clr-light);
+  font-size: var(--size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.lessons-cta__title {
+  margin-top: 0.5rem;
+  font-size: var(--size-3xl);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.lessons-cta__descr {
+  margin-top: 1rem;
+  max-width: 35rem;
+  color: var(--clr-light);
+}
+
+.lessons-cta__btn {
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+  font-weight: 800;
+  margin: 2rem;
+  font-size: var(--size-sm);
+}
+
+/* xs */
+/* @media (min-width: 475px) {} */
+
+/* sm */
+@media (min-width: 640px) {
+  .lessons-hero__title,
+  .lesson__title {
+    font-size: var(--size-5xl);
+  }
+}
+
+/* md */
+@media (min-width: 768px) {
+  .lesson {
+    flex-direction: row;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .lesson__content,
+  .lesson__media {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lesson--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .lessons-cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  .lessons-hero__title {
+    font-size: var(--size-7xl);
+  }
+
+  .lesson {
+    gap: 4rem;
+  }
+
+  .lesson__title {
+    font-size: var(--size-6xl);
+  }
+
+  .lessons-cta {
+    padding: 3rem;
+  }
+}
+
+/* xl */
+@media (min-width: 1280px) {
+  .lesson {
+    gap: 6rem;
+  }
+
+  .lesson__title {
+    font-size: var(--size-7xl);
+  }
+
+  .lessons-cta {
+    padding: 4rem;
+  }
+}
+
+/* 2xl */
+/* @media (min-width: 1536px) {} */

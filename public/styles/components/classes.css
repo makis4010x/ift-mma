@@ -1,0 +1,126 @@
+.classes__box {
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+  padding: 2rem;
+  margin-top: 1rem;
+  border: 2px solid var(--clr-border);
+}
+
+.classes__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.classes__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.classes__content {
+  position: relative;
+  z-index: 3;
+}
+.class__title-descr {
+  font-size: var(--size-2xl);
+}
+
+.classes__numbering {
+  font-family: var(--font-secondary);
+  color: var(--clr-red);
+}
+
+.classes__link {
+  text-decoration: none;
+}
+
+.classes__tagline {
+  color: var(--clr-red);
+}
+
+.classes__title {
+  margin-top: 1rem;
+  font-size: var(--size-2xl);
+}
+/* xs */
+/*@media (min-width: 475px) {} */
+
+/* sm */
+/*@media (min-width: 640px) {} */
+
+/* md */
+@media (min-width: 768px) {
+  /* 1. Ορισμός ονομάτων περιοχής σε κάθε κάρτα */
+  .classes__box--mma {
+    grid-area: mma;
+  }
+
+  .classes__box--kickboxing {
+    grid-area: kickboxing;
+  }
+
+  .classes__box--combo {
+    grid-area: combo;
+  }
+
+  .classes__box--pt {
+    grid-area: pt;
+  }
+
+  @media (min-width: 768px) {
+    .classes__box-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2 ίσες στήλες */
+      grid-template-areas:
+        "mma   kickboxing"
+        "combo pt";
+      gap: 1.5rem;
+    }
+
+    .classes__box {
+      margin-top: 0;
+    }
+
+    .classes__title {
+      font-size: var(--size-6xl);
+    }
+  }
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  .classes__box {
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .classes__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .classes__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+/* xl */
+@media (min-width: 1280px) {
+  .classes__title {
+    max-width: 20ch;
+  }
+}
+
+/* 2xl */
+/*@media (min-width: 1536px) {} */

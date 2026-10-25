@@ -1,0 +1,95 @@
+.personal-training {
+  background-color: var(--clr-red);
+  padding: 2rem;
+}
+
+.personal-training__tagline {
+  color: var(--clr-light);
+}
+
+.personal-training__descr {
+  color: var(--clr-light);
+  margin-top: 0.5rem;
+}
+
+.personal-training__title {
+  margin-top: 0.5rem;
+}
+
+.personal-training_left {
+  padding: 1rem;
+}
+
+.personal-training__right {
+  padding: 1rem;
+}
+
+#personal-training__btn {
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+  margin-top: 1rem;
+  transition: all 0.3s;
+}
+
+#personal-training__btn:hover {
+  transform: translateY(-3px);
+}
+
+.personal__training-date,
+.personal__training-time {
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.personal__training-date::-webkit-calendar-picker-indicator,
+.personal__training-time::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+}
+
+/* xs */
+/*@media (min-width: 475px) {} */
+
+/* sm */
+/* @media (min-width: 640px) {} */
+
+/* md */
+@media (min-width: 768px) {
+  .personal-training {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .personal-training_left {
+    padding-left: 2rem;
+  }
+
+  .personal-training__right {
+    padding-right: 2rem;
+  }
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  .personal-training_left {
+    padding-left: 4rem;
+  }
+
+  .personal-training__right {
+    padding-right: 4rem;
+  }
+}
+
+/* xl */
+@media (min-width: 1280px) {
+  .personal-training_left {
+    padding-left: 6rem;
+  }
+
+  .personal-training__right {
+    padding-right: 6rem;
+  }
+}
+
+/* 2xl */
+/*@media (min-width: 1536px) {} */
