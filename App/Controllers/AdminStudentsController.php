@@ -160,10 +160,88 @@ class AdminStudentsController
             exit('Ο μαθητής δεν βρέθηκε.');
         }
 
+
+        // Attendance history: 20 records per page.
+        $attendanceTotal = (int) $db->query(
+            "SELECT COUNT(*)
+             FROM attendances
+             WHERE student_id = :student_id",
+            ['student_id' => $studentId]
+        )->fetchColumn();
+
+        $perPage = 20;
+        $attendanceTotalPages = max(
+            1,
+            (int) ceil($attendanceTotal / $perPage)
+        );
+
+        $pageInput = $_GET['attendance_page'] ?? '1';
+
+        $attendancePage = (
+            is_string($pageInput) &&
+            ctype_digit($pageInput)
+        )
+            ? max(1, (int) $pageInput)
+            : 1;
+
+        $attendancePage = min(
+            $attendancePage,
+            $attendanceTotalPages
+        );
+
+        $offset = ($attendancePage - 1) * $perPage;
+
+        $attendances = $db->query(
+            "SELECT id, attended_at_utc, source
+             FROM attendances
+             WHERE student_id = :student_id
+             ORDER BY attended_at_utc DESC, id DESC
+             LIMIT {$perPage} OFFSET {$offset}",
+            ['student_id' => $studentId]
+        )->fetchAll();
+
+        // Membership history.
+        $memberships = $db->query(
+            "SELECT
+                sm.id,
+                sm.valid_from,
+                sm.valid_to,
+                sm.agreed_monthly_fee,
+                sm.currency,
+                mp.name AS plan_name
+             FROM student_memberships sm
+             LEFT JOIN membership_plans mp
+                ON mp.id = sm.plan_id
+             WHERE sm.student_id = :student_id
+             ORDER BY sm.valid_from DESC, sm.id DESC",
+            ['student_id' => $studentId]
+        )->fetchAll();
+
+        // Latest historical billing snapshot, if any.
+        $legacyBilling = $db->query(
+            "SELECT
+                recorded_monthly_fee,
+                recorded_billing_day,
+                currency,
+                source_effective_from
+             FROM legacy_billing_snapshots
+             WHERE student_id = :student_id
+             ORDER BY imported_at DESC, id DESC
+             LIMIT 1",
+            ['student_id' => $studentId]
+        )->fetch();
+
+
         loadView('admin-header', [
             'adminPage' => 'student-profile',
             'adminEmail' => $admin['email'],
-            'student' => $student
+            'student' => $student,
+            'attendances' => $attendances,
+            'attendanceTotal' => $attendanceTotal,
+            'attendancePage' => $attendancePage,
+            'attendanceTotalPages' => $attendanceTotalPages,
+            'memberships' => $memberships,
+            'legacyBilling' => $legacyBilling,
         ]);
     }
 }

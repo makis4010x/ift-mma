@@ -21,6 +21,9 @@ $fields = [
 ];
 ?>
 
+<?php
+$studentNotice = \Framework\Session::getFlash('student_notice');
+?>
 <section class="space-y-6">
 
     <a
@@ -30,6 +33,15 @@ $fields = [
         <i data-lucide="arrow-left" class="size-4"></i>
         Πίσω στους μαθητές
     </a>
+
+    <a
+        href="/admin/students/<?= (int) $student['id'] ?>/edit"
+        class="inline-flex items-center gap-2 rounded-xl border border-white/10 px-5 py-3 text-sm font-semibold text-zinc-200 transition hover:bg-white/5">
+        <i data-lucide="pencil" class="size-4"></i>
+        Επεξεργασία μαθητή
+    </a>
+
+
 
     <div>
         <h2 class="text-2xl font-extrabold text-white">
@@ -126,3 +138,16 @@ $fields = [
     </div>
 
 </section>
+<?php
+require basePath(
+    'App/Views/admin/student-history-content.view.php'
+);
+?>
+
+<?php if (is_string($studentNotice) && $studentNotice !== ''): ?>
+    <div
+        role="status"
+        class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-300">
+        <?= e($studentNotice) ?>
+    </div>
+<?php endif; ?>
