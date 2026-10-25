@@ -1,3 +1,10 @@
+<?php
+$adminPageTitle = match ($adminPage ?? 'dashboard') {
+  'students' => 'Μαθητές',
+  'administrators' => 'Διαχειριστές',
+  default => 'Dashboard',
+};
+?>
 <!doctype html>
 <html lang="el" class="dark">
 
@@ -71,7 +78,10 @@
           Διαχείριση σχολής
         </div>
         <nav class="space-y-1">
-          <a href="#students" class="nav-link" title="Μαθητές"><i data-lucide="users-round"></i><span data-sidebar-label>Μαθητές</span></a>
+          <a
+            href="/admin/students"
+            class="nav-link <?= (($adminPage ?? '') === 'students') ? 'active' : '' ?>"
+            title="Μαθητές"><i data-lucide="users-round"></i><span data-sidebar-label>Μαθητές</span></a>
           <a href="#memberships" class="nav-link" title="Συνδρομές"><i data-lucide="badge-check"></i><span data-sidebar-label>Συνδρομές</span></a>
           <a href="#payments" class="nav-link" title="Πληρωμές"><i data-lucide="wallet"></i><span data-sidebar-label>Πληρωμές</span></a>
           <a href="#attendance" class="nav-link" title="Παρουσίες & Scanner"><i data-lucide="scan-barcode"></i><span data-sidebar-label>Παρουσίες & Scanner</span></a>
@@ -159,15 +169,21 @@
           aria-controls="adminSidebar">
           <i data-lucide="panel-left" class="size-[1.15rem]"></i>
         </button>
+
         <div class="min-w-0">
           <div
             class="mb-1 hidden items-center gap-1.5 text-[.68rem] font-bold text-zinc-500 sm:flex">
-            Διαχείριση <i data-lucide="chevron-right" class="size-3"></i>
-            <span class="text-red-400">Dashboard</span>
+            Διαχείριση
+            <i data-lucide="chevron-right" class="size-3"></i>
+
+            <span class="text-red-400">
+              <?= e($adminPageTitle) ?>
+            </span>
           </div>
+
           <h1
             class="truncate text-lg font-extrabold tracking-tight sm:text-xl">
-            Dashboard
+            <?= e($adminPageTitle) ?>
           </h1>
         </div>
       </div>
@@ -233,15 +249,21 @@
     <!-- MAIN CONTENT: replace demo cards with PHP MVC views -->
     <!-- =================================================== -->
     <main id="dashboard" class="mx-auto max-w-7xl p-5 sm:p-8">
+
       <?php if (($adminPage ?? 'dashboard') === 'administrators'): ?>
 
-        <?php
-        require basePath(
+        <?php require basePath(
           'App/Views/admin/administrators-content.view.php'
-        );
-        ?>
+        ); ?>
+
+      <?php elseif (($adminPage ?? 'dashboard') === 'students'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/students-content.view.php'
+        ); ?>
 
       <?php else: ?>
+
         <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div

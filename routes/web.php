@@ -56,3 +56,14 @@ $router->post(
     '/admin/administrators/{id}/status',
     'AdminAdministratorsController@changeStatus'
 );
+
+$router->post(
+    '/admin/administrators/{id}/delete',
+    'AdminAdministratorsController@destroy'
+);
+
+// Student management
+$router->get(
+    '/admin/students',
+    'AdminStudentsController@index'
+);
