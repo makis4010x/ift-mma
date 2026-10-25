@@ -4,18 +4,33 @@
  * @var \Framework\Router $router
  */
 
-// Public website
+// Home
 $router->get('/', 'HomeController@index');
-$router->get('/academy', 'controllers/academy.php');
-$router->get('/lessons', 'controllers/lessons.php');
-$router->get('/schedule', 'controllers/schedule.php');
 
-$router->get('/personal-training', 'controllers/personal-training.php');
-$router->get('/contact', 'controllers/contact.php');
-$router->get('/book-personal-training', 'controllers/book-personal-training.php');
+// Public pages
+$router->get('/academy', 'PageController@academy');
 
-// Authentication
+$router->get('/lessons', 'PageController@lessons');
+
+$router->get('/schedule', 'PageController@schedule');
+
+$router->get(
+    '/personal-training',
+    'PageController@personalTraining'
+);
+
+$router->get('/contact', 'PageController@contact');
+
+$router->get(
+    '/book-personal-training',
+    'PageController@bookPersonalTraining'
+);
+
+// Authentication - temporary legacy controller
 $router->get('/login', 'controllers/login.php');
 
-// Development only
-$router->get('/admin-preview', 'controllers/admin-preview.php');
+// Development preview
+$router->get(
+    '/admin-preview',
+    'controllers/admin-preview.php'
+);
