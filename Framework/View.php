@@ -10,28 +10,42 @@ use RuntimeException;
 final class View
 {
     public static function render(
-        string $name,
-        array $data = []
+    string $name,
+    array $data = []
     ): void {
-        self::display(
-            $name,
-            'views/',
-            '.view.php',
-            $data
+    self::display(
+        $name,
+        'App/Views/',
+        '.view.php',
+        $data
         );
     }
 
     public static function partial(
+    string $name,
+    array $data = []
+    ): void {
+    self::display(
+        $name,
+        'App/Views/partials/',
+        '.php',
+        $data
+        );
+    }
+
+    
+    public static function layout(
         string $name,
         array $data = []
     ): void {
         self::display(
             $name,
-            'views/partials/',
+            'App/Views/layouts/',
             '.php',
             $data
         );
     }
+
 
     private static function display(
         string $name,
@@ -65,3 +79,5 @@ final class View
         require $path;
     }
 }
+
+
