@@ -40,4 +40,25 @@ final class Database
 
         return $statement;
     }
+
+    
+    public function transaction(callable $callback): mixed
+    {
+        $this->connection->beginTransaction();
+
+        try {
+            $result = $callback($this);
+
+            $this->connection->commit();
+
+            return $result;
+        } catch (\Throwable $exception) {
+            if ($this->connection->inTransaction()) {
+                $this->connection->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
 }

@@ -8,3 +8,4 @@
 .DS_Store
 /config/database.local.php
 /storage/logs/
+/storage/imports/
