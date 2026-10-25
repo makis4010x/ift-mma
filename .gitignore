@@ -7,3 +7,4 @@
 .vscode
 .DS_Store
 /config/database.local.php
+/storage/logs/
