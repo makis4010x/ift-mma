@@ -55,3 +55,15 @@ function inspectAndDie($value) {
     die(var_dump($value));
     echo '</pre>';
 }
+
+/**
+ * Escape dynamic text for HTML output.
+ */
+function e(string|int|float|null $value): string
+{
+    return htmlspecialchars(
+        (string) $value,
+        ENT_QUOTES | ENT_SUBSTITUTE,
+        'UTF-8'
+    );
+}
