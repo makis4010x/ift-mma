@@ -67,3 +67,8 @@ $router->get(
     '/admin/students',
     'AdminStudentsController@index'
 );
+
+$router->get(
+    '/admin/students/{id}',
+    'AdminStudentsController@show'
+);

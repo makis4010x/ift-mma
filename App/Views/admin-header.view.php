@@ -1,6 +1,7 @@
 <?php
 $adminPageTitle = match ($adminPage ?? 'dashboard') {
   'students' => 'Μαθητές',
+  'student-profile' => 'Προφίλ μαθητή',
   'administrators' => 'Διαχειριστές',
   default => 'Dashboard',
 };
@@ -256,13 +257,21 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
           'App/Views/admin/administrators-content.view.php'
         ); ?>
 
+
       <?php elseif (($adminPage ?? 'dashboard') === 'students'): ?>
 
         <?php require basePath(
           'App/Views/admin/students-content.view.php'
         ); ?>
 
+      <?php elseif (($adminPage ?? 'dashboard') === 'student-profile'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/student-profile-content.view.php'
+        ); ?>
+
       <?php else: ?>
+
 
         <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>

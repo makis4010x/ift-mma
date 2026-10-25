@@ -118,10 +118,18 @@
                                 <?= (int) $student['id'] ?>
                             </td>
 
+
                             <td class="px-5 py-4 font-semibold">
-                                <?= e($student['first_name']) ?>
-                                <?= e($student['last_name']) ?>
+
+                                <a
+                                    href="/admin/students/<?= (int) $student['id'] ?>"
+                                    class="text-white transition hover:text-red-400">
+                                    <?= e($student['first_name']) ?>
+                                    <?= e($student['last_name']) ?>
+                                </a>
+
                             </td>
+
 
                             <td class="px-5 py-4 text-zinc-400">
                                 <?= e($student['email'] ?: '—') ?>

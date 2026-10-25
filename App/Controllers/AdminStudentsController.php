@@ -112,4 +112,58 @@ class AdminStudentsController
             'totalResults' => $totalResults
         ]);
     }
+
+
+    public function show(array $params): void
+    {
+        $admin = AdminGuard::requireAdmin();
+
+        $rawId = $params['id'] ?? '';
+
+        $studentId = filter_var(
+            $rawId,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]
+        );
+
+        if ($studentId === false) {
+            http_response_code(404);
+            exit('Ο μαθητής δεν βρέθηκε.');
+        }
+
+        $db = new Database(Config::get('database'));
+
+        $student = $db->query(
+            "SELECT
+            s.id,
+            s.legacy_id,
+            s.first_name,
+            s.last_name,
+            s.father_name,
+            s.birth_date,
+            s.email,
+            s.phone,
+            s.contact_phone,
+            s.address,
+            s.created_at,
+            b.code AS barcode
+         FROM students s
+         LEFT JOIN student_barcodes b
+            ON b.student_id = s.id
+         WHERE s.id = :id
+         LIMIT 1",
+            ['id' => $studentId]
+        )->fetch();
+
+        if (!is_array($student)) {
+            http_response_code(404);
+            exit('Ο μαθητής δεν βρέθηκε.');
+        }
+
+        loadView('admin-header', [
+            'adminPage' => 'student-profile',
+            'adminEmail' => $admin['email'],
+            'student' => $student
+        ]);
+    }
 }
