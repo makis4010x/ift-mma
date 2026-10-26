@@ -7,8 +7,13 @@
         <div class="login__content">
           <p class="login__tagline">MEMBERS AREA</p>
           <h1 class="login__title">ΣΥΝΔΕΣΗ</h1>
-
-          <form class="login__form" action="#">
+          <?php if (!empty($error)): ?>
+              <p role="alert" class="login__error">
+                  <?= e($error) ?>
+              </p>
+          <?php endif; ?>
+          <form class="login__form" action="/login" method="POST">
+          <?= \Framework\Csrf::field() ?>
             <label for="email">Email</label>
             <input
               class="login__form-email"

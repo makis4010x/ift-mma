@@ -24,6 +24,13 @@
         </p>
     </div>
 
+    <a
+        href="/admin/students/new"
+        class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-red-700">
+        <i data-lucide="user-round-plus" class="size-4"></i>
+        Νέος μαθητής
+    </a>
+
     <!-- Search -->
     <div
         class="rounded-2xl border border-white/[.08]

@@ -1,11 +1,9 @@
     <!-- Footer -->
     <footer class="section footer container">
-      <a href="./index.html"
-        ><img
+      <a href="./index.html"><img
           class="footer__img"
           src="/images/logos/IFT_Logo_White.png"
-          alt="IFT Academy Logo"
-      /></a>
+          alt="IFT Academy Logo" /></a>
 
       <div class="footer__details">
         <div class="footer__group">
@@ -13,9 +11,7 @@
           <div class="footer__links">
             <a href="./lessons.html" class="footer__link">Μαθήματα</a>
             <a href="./schedule.html" class="footer__link">Πρόγραμμα</a>
-            <a href="./personal_training.html" class="footer__link"
-              >Personal Training</a
-            >
+            <a href="./personal_training.html" class="footer__link">Personal Training</a>
           </div>
         </div>
 
@@ -36,8 +32,7 @@
             <a
               href="https://www.instagram.com/ift_mma/"
               target="_blank"
-              class="footer__link"
-            >
+              class="footer__link">
               @ift_mma
             </a>
           </div>
@@ -58,6 +53,7 @@
         <p class="footer__dev">Made by Makis</p>
       </div>
     </footer>
-    <script type="module" src="./src/main.js"></script>
-  </body>
-</html>
+    <script type="module" src="/src/main.js"></script>
+    </body>
+
+    </html>

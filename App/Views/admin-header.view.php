@@ -2,8 +2,13 @@
 $adminPageTitle = match ($adminPage ?? 'dashboard') {
   'students' => 'Μαθητές',
   'student-profile' => 'Προφίλ μαθητή',
+  'student-form' => ($studentFormMode ?? '') === 'create'
+    ? 'Νέος μαθητής'
+    : 'Επεξεργασία μαθητή',
+  'attendance' => 'Παρουσίες',
   'administrators' => 'Διαχειριστές',
   default => 'Dashboard',
+  'scanner' => 'Scanner εισόδου',
 };
 ?>
 <!doctype html>
@@ -67,7 +72,7 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
         <div class="section-label">Επισκόπηση</div>
         <nav class="space-y-1">
           <a
-            href="#dashboard"
+            href="/admin"
             class="nav-link <?= (($adminPage ?? 'dashboard') === 'dashboard') ? 'active' : '' ?>"
             aria-current="page"
             title="Dashboard"><i data-lucide="layout-dashboard"></i><span data-sidebar-label>Dashboard</span></a>
@@ -81,11 +86,31 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
         <nav class="space-y-1">
           <a
             href="/admin/students"
-            class="nav-link <?= (($adminPage ?? '') === 'students') ? 'active' : '' ?>"
-            title="Μαθητές"><i data-lucide="users-round"></i><span data-sidebar-label>Μαθητές</span></a>
+            class="nav-link <?= in_array(
+                              $adminPage ?? '',
+                              ['students', 'student-profile', 'student-form'],
+                              true
+                            ) ? 'active' : '' ?>"
+            title=" Μαθητές"><i data-lucide="users-round"></i><span data-sidebar-label>Μαθητές</span></a>
           <a href="#memberships" class="nav-link" title="Συνδρομές"><i data-lucide="badge-check"></i><span data-sidebar-label>Συνδρομές</span></a>
           <a href="#payments" class="nav-link" title="Πληρωμές"><i data-lucide="wallet"></i><span data-sidebar-label>Πληρωμές</span></a>
-          <a href="#attendance" class="nav-link" title="Παρουσίες & Scanner"><i data-lucide="scan-barcode"></i><span data-sidebar-label>Παρουσίες & Scanner</span></a>
+
+          <a
+            href="/admin/attendance"
+            class="nav-link <?= (($adminPage ?? '') === 'attendance') ? 'active' : '' ?>"
+            title="Παρουσίες">
+            <i data-lucide="calendar-check"></i>
+            <span data-sidebar-label>Παρουσίες</span>
+          </a>
+
+          <a
+            href="/admin/scanner"
+            class="nav-link <?= (($adminPage ?? '') === 'scanner') ? 'active' : '' ?>"
+            title="Scanner εισόδου">
+            <i data-lucide="scan-barcode"></i>
+            <span data-sidebar-label>Scanner εισόδου</span>
+          </a>
+
           <a href="#schedule" class="nav-link" title="Πρόγραμμα"><i data-lucide="calendar-days"></i><span data-sidebar-label>Πρόγραμμα</span></a>
           <a href="#bookings" class="nav-link" title="Personal Bookings"><i data-lucide="calendar-check-2"></i><span data-sidebar-label>Personal Bookings</span></a>
           <a href="#services" class="nav-link" title="Υπηρεσίες"><i data-lucide="dumbbell"></i><span data-sidebar-label>Υπηρεσίες</span></a>
@@ -270,7 +295,30 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
           'App/Views/admin/student-profile-content.view.php'
         ); ?>
 
+
+      <?php elseif (($adminPage ?? 'dashboard') === 'student-form'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/student-form-content.view.php'
+        ); ?>
+
+      <?php elseif (($adminPage ?? 'dashboard') === 'attendance'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/attendance-content.view.php'
+        ); ?>
+
+
+      <?php elseif (($adminPage ?? 'dashboard') === 'scanner'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/scanner-content.view.php'
+        ); ?>
+
       <?php else: ?>
+        >
+
+
 
 
         <div class="mb-8 flex flex-wrap items-end justify-between gap-4">

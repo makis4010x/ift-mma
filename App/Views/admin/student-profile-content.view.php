@@ -138,12 +138,6 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
     </div>
 
 </section>
-<?php
-require basePath(
-    'App/Views/admin/student-history-content.view.php'
-);
-?>
-
 <?php if (is_string($studentNotice) && $studentNotice !== ''): ?>
     <div
         role="status"
@@ -151,3 +145,8 @@ require basePath(
         <?= e($studentNotice) ?>
     </div>
 <?php endif; ?>
+<?php
+require basePath(
+    'App/Views/admin/student-history-content.view.php'
+);
+?>

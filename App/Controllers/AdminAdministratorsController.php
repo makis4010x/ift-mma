@@ -132,141 +132,286 @@ class AdminAdministratorsController
         $this->redirect();
     }
 
-    
-public function changeStatus(array $params): void
-{
-    $currentAdmin = AdminGuard::requireAdmin();
-    Csrf::protect();
 
-    $idInput = $params['id'] ?? null;
-    $requestedStatus = $_POST['status'] ?? null;
+    public function changeStatus(array $params): void
+    {
+        $currentAdmin = AdminGuard::requireAdmin();
+        Csrf::protect();
 
-    $targetId = is_string($idInput)
-        ? filter_var(
-            $idInput,
-            FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]]
-        )
-        : false;
+        $idInput = $params['id'] ?? null;
+        $requestedStatus = $_POST['status'] ?? null;
 
-    if (
-        $targetId === false ||
-        !is_string($requestedStatus) ||
-        !in_array(
-            $requestedStatus,
-            ['active', 'disabled'],
-            true
-        )
-    ) {
-        $this->fail('Μη έγκυρη ενέργεια.');
-    }
+        $targetId = is_string($idInput)
+            ? filter_var(
+                $idInput,
+                FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 1]]
+            )
+            : false;
 
-    $currentAdminId = (int) $currentAdmin['id'];
+        if (
+            $targetId === false ||
+            !is_string($requestedStatus) ||
+            !in_array(
+                $requestedStatus,
+                ['active', 'disabled'],
+                true
+            )
+        ) {
+            $this->fail('Μη έγκυρη ενέργεια.');
+        }
 
-    $db = new Database(Config::get('database'));
+        $currentAdminId = (int) $currentAdmin['id'];
 
-    $result = $db->transaction(
-        static function (Database $db) use (
-            $targetId,
-            $currentAdminId,
-            $requestedStatus
-        ): string {
+        $db = new Database(Config::get('database'));
 
-            // Lock administrator rows to prevent
-            // concurrent status changes.
-            $rows = $db->query(
-                "SELECT id, status
+        $result = $db->transaction(
+            static function (Database $db) use (
+                $targetId,
+                $currentAdminId,
+                $requestedStatus
+            ): string {
+
+                // Lock administrator rows to prevent
+                // concurrent status changes.
+                $rows = $db->query(
+                    "SELECT id, status
                  FROM users
                  WHERE role = 'admin'
                  ORDER BY id
                  FOR UPDATE"
-            )->fetchAll();
+                )->fetchAll();
 
-            $statuses = [];
+                $statuses = [];
 
-            foreach ($rows as $row) {
-                $statuses[(int) $row['id']] =
-                    $row['status'];
-            }
-
-            // The acting admin must still be active.
-            if (
-                ($statuses[$currentAdminId] ?? null)
-                !== 'active'
-            ) {
-                return 'unauthorized';
-            }
-
-            if (!isset($statuses[$targetId])) {
-                return 'not_found';
-            }
-
-            if ($targetId === $currentAdminId) {
-                return 'self';
-            }
-
-            if ($statuses[$targetId] === 'pending') {
-                return 'pending';
-            }
-
-            if ($statuses[$targetId] === $requestedStatus) {
-                return 'unchanged';
-            }
-
-            // Protect the last active administrator.
-            if ($requestedStatus === 'disabled') {
-                $activeCount = count(
-                    array_filter(
-                        $statuses,
-                        static fn($status) =>
-                            $status === 'active'
-                    )
-                );
-
-                if ($activeCount <= 1) {
-                    return 'last_admin';
+                foreach ($rows as $row) {
+                    $statuses[(int) $row['id']] =
+                        $row['status'];
                 }
-            }
 
-            $db->query(
-                "UPDATE users
+                // The acting admin must still be active.
+                if (
+                    ($statuses[$currentAdminId] ?? null)
+                    !== 'active'
+                ) {
+                    return 'unauthorized';
+                }
+
+                if (!isset($statuses[$targetId])) {
+                    return 'not_found';
+                }
+
+                if ($targetId === $currentAdminId) {
+                    return 'self';
+                }
+
+                if ($statuses[$targetId] === 'pending') {
+                    return 'pending';
+                }
+
+                if ($statuses[$targetId] === $requestedStatus) {
+                    return 'unchanged';
+                }
+
+                // Protect the last active administrator.
+                if ($requestedStatus === 'disabled') {
+                    $activeCount = count(
+                        array_filter(
+                            $statuses,
+                            static fn($status) =>
+                            $status === 'active'
+                        )
+                    );
+
+                    if ($activeCount <= 1) {
+                        return 'last_admin';
+                    }
+                }
+
+                $db->query(
+                    "UPDATE users
                  SET status = :status
                  WHERE id = :id
                    AND role = 'admin'",
-                [
-                    'status' => $requestedStatus,
-                    'id' => $targetId
-                ]
-            );
+                    [
+                        'status' => $requestedStatus,
+                        'id' => $targetId
+                    ]
+                );
 
-            return 'updated';
-        }
-    );
-
-    if ($result !== 'updated') {
-        $messages = [
-            'unauthorized' => 'Δεν έχεις πλέον δικαίωμα πρόσβασης.',
-            'not_found' => 'Ο διαχειριστής δεν βρέθηκε.',
-            'self' => 'Δεν μπορείς να απενεργοποιήσεις τον εαυτό σου.',
-            'pending' => 'Ο λογαριασμός εκκρεμεί ενεργοποίηση.',
-            'unchanged' => 'Ο λογαριασμός έχει ήδη αυτή την κατάσταση.',
-            'last_admin' => 'Δεν μπορεί να απενεργοποιηθεί ο τελευταίος ενεργός Admin.'
-        ];
-
-        $this->fail(
-            $messages[$result] ?? 'Η ενέργεια απέτυχε.'
+                return 'updated';
+            }
         );
+
+        if ($result !== 'updated') {
+            $messages = [
+                'unauthorized' => 'Δεν έχεις πλέον δικαίωμα πρόσβασης.',
+                'not_found' => 'Ο διαχειριστής δεν βρέθηκε.',
+                'self' => 'Δεν μπορείς να απενεργοποιήσεις τον εαυτό σου.',
+                'pending' => 'Ο λογαριασμός εκκρεμεί ενεργοποίηση.',
+                'unchanged' => 'Ο λογαριασμός έχει ήδη αυτή την κατάσταση.',
+                'last_admin' => 'Δεν μπορεί να απενεργοποιηθεί ο τελευταίος ενεργός Admin.'
+            ];
+
+            $this->fail(
+                $messages[$result] ?? 'Η ενέργεια απέτυχε.'
+            );
+        }
+
+        Session::flash(
+            'admin_manage_success',
+            $requestedStatus === 'active'
+                ? 'Ο διαχειριστής ενεργοποιήθηκε.'
+                : 'Ο διαχειριστής απενεργοποιήθηκε.'
+        );
+
+        $this->redirect();
     }
 
-    Session::flash(
-        'admin_manage_success',
-        $requestedStatus === 'active'
-            ? 'Ο διαχειριστής ενεργοποιήθηκε.'
-            : 'Ο διαχειριστής απενεργοποιήθηκε.'
-    );
 
-    $this->redirect();
-}
+
+    public function destroy(array $params): void
+    {
+        $currentAdmin = AdminGuard::requireAdmin();
+        Csrf::protect();
+
+        $rawId = $params['id'] ?? null;
+
+        $targetId = is_string($rawId)
+            ? filter_var(
+                $rawId,
+                FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 1]]
+            )
+            : false;
+
+        if ($targetId === false) {
+            $this->fail('Μη έγκυρος διαχειριστής.');
+        }
+
+        $currentAdminId = (int) $currentAdmin['id'];
+
+        if ($targetId === $currentAdminId) {
+            $this->fail(
+                'Δεν μπορείς να διαγράψεις τον λογαριασμό σου.'
+            );
+        }
+
+        $db = new Database(Config::get('database'));
+
+        try {
+            $result = $db->transaction(
+                static function (Database $db) use (
+                    $targetId,
+                    $currentAdminId
+                ): string {
+
+                    // Lock all admin accounts during deletion.
+                    $rows = $db->query(
+                        "SELECT id, status
+                     FROM users
+                     WHERE role = 'admin'
+                     ORDER BY id
+                     FOR UPDATE"
+                    )->fetchAll();
+
+                    $admins = [];
+
+                    foreach ($rows as $row) {
+                        $admins[(int) $row['id']] =
+                            $row['status'];
+                    }
+
+                    if (
+                        ($admins[$currentAdminId] ?? null)
+                        !== 'active'
+                    ) {
+                        return 'unauthorized';
+                    }
+
+                    if (!array_key_exists($targetId, $admins)) {
+                        return 'not_found';
+                    }
+
+                    if ($targetId === $currentAdminId) {
+                        return 'self';
+                    }
+
+                    $activeCount = count(
+                        array_filter(
+                            $admins,
+                            static fn($status) =>
+                            $status === 'active'
+                        )
+                    );
+
+                    // Never remove the last active admin.
+                    if (
+                        $admins[$targetId] === 'active' &&
+                        $activeCount <= 1
+                    ) {
+                        return 'last_admin';
+                    }
+
+                    // Preserve import-resolution history.
+                    $references = (int) $db->query(
+                        "SELECT COUNT(*)
+                     FROM import_issues
+                     WHERE resolved_by = :id",
+                        ['id' => $targetId]
+                    )->fetchColumn();
+
+                    if ($references > 0) {
+                        return 'has_history';
+                    }
+
+                    $statement = $db->query(
+                        "DELETE FROM users
+                     WHERE id = :id
+                       AND role = 'admin'
+                       AND student_id IS NULL",
+                        ['id' => $targetId]
+                    );
+
+                    return $statement->rowCount() === 1
+                        ? 'deleted'
+                        : 'not_found';
+                }
+            );
+        } catch (\PDOException $exception) {
+
+            if ((string) $exception->getCode() === '23000') {
+                $this->fail(
+                    'Ο λογαριασμός συνδέεται με άλλα '
+                        . 'δεδομένα και δεν μπορεί να διαγραφεί. '
+                        . 'Χρησιμοποίησε την απενεργοποίηση.'
+                );
+            }
+
+            throw $exception;
+        }
+
+        if ($result !== 'deleted') {
+            $messages = [
+                'unauthorized' => 'Δεν έχεις δικαίωμα διαγραφής.',
+                'not_found' => 'Ο διαχειριστής δεν βρέθηκε.',
+                'self' => 'Δεν μπορείς να διαγράψεις τον λογαριασμό σου.',
+                'last_admin' => 'Δεν μπορεί να διαγραφεί ο τελευταίος ενεργός Admin.',
+                'has_history' => 'Ο διαχειριστής έχει ιστορικές καταγραφές. Χρησιμοποίησε την απενεργοποίηση.'
+            ];
+
+            $this->fail(
+                $messages[$result] ?? 'Η διαγραφή απέτυχε.'
+            );
+        }
+
+        Session::flash(
+            'admin_manage_success',
+            'Ο διαχειριστής διαγράφηκε οριστικά.'
+        );
+
+        $this->redirect();
+    }
 
 
     private function fail(string $message): never

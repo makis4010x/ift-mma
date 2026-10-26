@@ -9,3 +9,4 @@
 /config/database.local.php
 /storage/logs/
 /storage/imports/
+/config/scanner.local.php

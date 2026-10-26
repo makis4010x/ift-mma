@@ -72,3 +72,60 @@ $router->get(
     '/admin/students/{id}',
     'AdminStudentsController@show'
 );
+
+
+// Create student
+$router->get(
+    '/admin/students/new',
+    'AdminStudentFormController@create'
+);
+
+$router->post(
+    '/admin/students',
+    'AdminStudentFormController@store'
+);
+
+// Edit student
+$router->get(
+    '/admin/students/{id}/edit',
+    'AdminStudentFormController@edit'
+);
+
+$router->post(
+    '/admin/students/{id}/update',
+    'AdminStudentFormController@update'
+);
+
+// Attendance management
+$router->get(
+    '/admin/attendance',
+    'AdminAttendanceController@index'
+);
+
+// Entrance barcode scanner
+$router->get(
+    '/admin/scanner',
+    'AdminScannerController@index'
+);
+
+// Live student search inside the existing scanner page
+$router->get(
+    '/admin/scanner/search',
+    'AdminScannerController@search'
+);
+
+$router->post(
+    '/admin/scanner/scan',
+    'AdminScannerController@scan'
+);
+
+// Student-facing scanner kiosk
+$router->get(
+    '/scanner',
+    'KioskScannerController@index'
+);
+
+$router->post(
+    '/scanner/check-in',
+    'KioskScannerController@checkIn'
+);
