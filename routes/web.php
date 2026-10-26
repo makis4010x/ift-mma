@@ -129,3 +129,50 @@ $router->post(
     '/scanner/check-in',
     'KioskScannerController@checkIn'
 );
+
+// Membership plans
+$router->get(
+    '/admin/membership-plans',
+    'AdminMembershipPlansController@index'
+);
+
+$router->post(
+    '/admin/membership-plans',
+    'AdminMembershipPlansController@store'
+);
+
+// Edit program name, code and status
+$router->post(
+    '/admin/membership-plans/update',
+    'AdminMembershipPlansController@update'
+);
+
+// Record a new historical price
+$router->post(
+    '/admin/membership-plans/price',
+    'AdminMembershipPlansController@changePrice'
+);
+
+// Delete only unused programs without price changes
+$router->post(
+    '/admin/membership-plans/delete',
+    'AdminMembershipPlansController@delete'
+);
+
+// Assign a membership to a student
+$router->post(
+    '/admin/students/{id}/memberships',
+    'AdminStudentMembershipsController@store'
+);
+
+// Register a real student payment
+$router->post(
+    '/admin/students/{id}/payments',
+    'AdminStudentPaymentsController@store'
+);
+
+// Cancel an existing payment without deleting its history
+$router->post(
+    '/admin/students/{id}/payments/void',
+    'AdminStudentPaymentsController@voidPayment'
+);

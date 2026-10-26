@@ -200,6 +200,19 @@ class AdminStudentsController
             ['student_id' => $studentId]
         )->fetchAll();
 
+        // Active plans available for manual assignment.
+        $membershipPlans = $db->query(
+            "SELECT
+                id,
+                code,
+                name,
+                default_monthly_fee,
+                currency
+                FROM membership_plans
+                WHERE is_active = 1
+                ORDER BY name ASC, id ASC"
+        )->fetchAll();
+
         // Membership history.
         $memberships = $db->query(
             "SELECT
@@ -231,6 +244,12 @@ class AdminStudentsController
             ['student_id' => $studentId]
         )->fetch();
 
+        // New payment charges for this student.
+
+        $paymentData = \App\Support\StudentPaymentSummary::load(
+            $db,
+            $studentId
+        );
 
         loadView('admin-header', [
             'adminPage' => 'student-profile',
@@ -241,7 +260,9 @@ class AdminStudentsController
             'attendancePage' => $attendancePage,
             'attendanceTotalPages' => $attendanceTotalPages,
             'memberships' => $memberships,
+            'membershipPlans' => $membershipPlans,
             'legacyBilling' => $legacyBilling,
+            'paymentData' => $paymentData,
         ]);
     }
 }

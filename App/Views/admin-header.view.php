@@ -9,6 +9,7 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
   'administrators' => 'Διαχειριστές',
   default => 'Dashboard',
   'scanner' => 'Scanner εισόδου',
+  'membership-plans' => 'Συνδρομές',
 };
 ?>
 <!doctype html>
@@ -92,7 +93,10 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
                               true
                             ) ? 'active' : '' ?>"
             title=" Μαθητές"><i data-lucide="users-round"></i><span data-sidebar-label>Μαθητές</span></a>
-          <a href="#memberships" class="nav-link" title="Συνδρομές"><i data-lucide="badge-check"></i><span data-sidebar-label>Συνδρομές</span></a>
+          <a
+            href="/admin/membership-plans"
+            class="nav-link <?= (($adminPage ?? '') === 'membership-plans') ? 'active' : '' ?>"
+            title="Συνδρομές"><i data-lucide="badge-check"></i><span data-sidebar-label>Συνδρομές</span></a>
           <a href="#payments" class="nav-link" title="Πληρωμές"><i data-lucide="wallet"></i><span data-sidebar-label>Πληρωμές</span></a>
 
           <a
@@ -315,8 +319,14 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
           'App/Views/admin/scanner-content.view.php'
         ); ?>
 
+      <?php elseif (($adminPage ?? 'dashboard') === 'membership-plans'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/membership-plans-content.view.php'
+        ); ?>
+
       <?php else: ?>
-        >
+
 
 
 

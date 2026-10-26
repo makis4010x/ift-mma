@@ -53,10 +53,42 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
         </p>
     </div>
 
+
+    <!-- Student profile tabs -->
+    <nav
+        id="student-tabs"
+        aria-label="Ενότητες μαθητή"
+        class="flex flex-wrap gap-2">
+        <?php foreach (
+            [
+                'details' => 'Στοιχεία',
+                'attendance' => 'Παρουσίες',
+                'memberships' => 'Συνδρομές',
+                'barcode' => 'Barcode',
+            ] as $tabKey => $tabLabel
+        ): ?>
+
+            <button
+                type="button"
+                data-student-tab="<?= e($tabKey) ?>"
+                aria-controls="student-panel-<?= e($tabKey) ?>"
+                aria-pressed="<?= $tabKey === 'details' ? 'true' : 'false' ?>"
+                class="rounded-xl border border-white/10 bg-[#18181c]
+                   px-4 py-2.5 text-sm font-semibold text-zinc-300
+                   transition hover:bg-white/10">
+                <?= e($tabLabel) ?>
+            </button>
+
+        <?php endforeach; ?>
+    </nav>
+
+
     <!-- Student information -->
     <div
+        id="student-panel-details"
+        data-student-panel="details"
         class="rounded-2xl border border-white/[.08]
-               bg-[#18181c] p-6">
+           bg-[#18181c] p-6">
         <h3 class="mb-5 text-lg font-bold">
             Προσωπικά στοιχεία
         </h3>
@@ -87,8 +119,11 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
 
     <!-- Barcode -->
     <div
-        class="rounded-2xl border border-white/[.08]
-               bg-[#18181c] p-6">
+        id="student-panel-barcode"
+        data-student-panel="barcode"
+        hidden
+        class="hidden rounded-2xl border border-white/[.08]
+           bg-[#18181c] p-6">
         <h3 class="mb-2 text-lg font-bold">
             Barcode μαθητή
         </h3>
@@ -105,10 +140,13 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
             ) === 1
         ): ?>
 
+
             <div
+                id="student-barcode-card"
+                data-student-name="<?= e($fullName) ?>"
                 class="inline-flex max-w-full flex-col
-                       items-center gap-3 overflow-x-auto
-                       rounded-xl bg-white p-6">
+           items-center gap-3 overflow-x-auto
+           rounded-xl bg-white p-6">
                 <?= \App\Support\Barcode128::svg(
                     $student['barcode']
                 ) ?>
@@ -126,6 +164,31 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
                 </span>
             </div>
 
+            <div class="mt-5 flex flex-wrap gap-3">
+
+                <button
+                    type="button"
+                    id="student-barcode-enlarge"
+                    class="inline-flex items-center gap-2 rounded-xl
+               bg-red-600 px-5 py-3 text-sm font-bold
+               text-white transition hover:bg-red-700">
+                    <i data-lucide="maximize-2" class="size-4"></i>
+                    Μεγέθυνση
+                </button>
+
+                <button
+                    type="button"
+                    id="student-barcode-print"
+                    class="inline-flex items-center gap-2 rounded-xl
+               border border-white/10 px-5 py-3
+               text-sm font-semibold text-zinc-200
+               transition hover:bg-white/5">
+                    <i data-lucide="printer" class="size-4"></i>
+                    Εκτύπωση
+                </button>
+
+            </div>
+
         <?php else: ?>
 
             <p class="text-sm text-amber-400">
@@ -136,6 +199,40 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
         <?php endif; ?>
 
     </div>
+
+
+    <!-- Barcode enlargement modal -->
+    <dialog
+        id="student-barcode-dialog"
+        aria-label="Μεγέθυνση barcode μαθητή"
+        class="w-[calc(100%-2rem)] max-w-3xl
+           rounded-2xl border border-white/10
+           bg-[#18181c] p-0 text-white
+           backdrop:bg-black/80">
+        <div class="p-5 sm:p-8">
+
+            <div class="mb-6 flex items-center justify-between gap-4">
+                <h3 class="text-lg font-bold text-white">
+                    Barcode μαθητή
+                </h3>
+
+                <button
+                    type="button"
+                    id="student-barcode-close"
+                    aria-label="Κλείσιμο μεγέθυνσης"
+                    class="rounded-lg border border-white/10
+                       px-4 py-2 text-sm text-white
+                       hover:bg-white/10">
+                    Κλείσιμο
+                </button>
+            </div>
+
+            <div
+                id="student-barcode-dialog-content"
+                class="overflow-x-auto rounded-xl bg-white p-4 sm:p-6"></div>
+
+        </div>
+    </dialog>
 
 </section>
 <?php if (is_string($studentNotice) && $studentNotice !== ''): ?>
@@ -150,3 +247,5 @@ require basePath(
     'App/Views/admin/student-history-content.view.php'
 );
 ?>
+<script type="module" src="/src/student-profile-tabs.js"></script>
+<script type="module" src="/src/student-barcode-actions.js"></script>
