@@ -3,6 +3,7 @@
 /**
  * @var array<string, mixed> $student
  * @var array<string, mixed> $paymentData
+ * @var array<string, mixed> $legacyPaymentData
  */
 
 $paymentError = \Framework\Session::getFlash(
@@ -715,3 +716,9 @@ if (preg_match('/\A[a-f0-9]{32}\z/D', $requestKey) !== 1) {
 <script
     type="module"
     src="/src/student-payment-form.js?v=1"></script>
+
+<?php
+loadView('admin/student-legacy-payments-content', [
+    'legacyPaymentData' => $legacyPaymentData
+]);
+?>

@@ -4,6 +4,7 @@
  * Student profile.
  *
  * @var array<string, mixed> $student
+ * @var array<string, mixed> $studentActivity
  */
 
 $fullName = trim(
@@ -53,6 +54,13 @@ $studentNotice = \Framework\Session::getFlash('student_notice');
         </p>
     </div>
 
+    <!-- Student activity: independent of paid coverage -->
+    <?php
+    loadView('admin/student-activity-content', [
+        'student' => $student,
+        'studentActivity' => $studentActivity
+    ]);
+    ?>
 
     <!-- Student profile tabs -->
     <nav

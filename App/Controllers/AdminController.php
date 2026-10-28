@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Framework\Config;
 use Framework\Database;
+use App\Support\AdminDashboardStats;
 
 class AdminController
 {
@@ -17,6 +18,8 @@ class AdminController
         $admin = AdminGuard::requireAdmin();
 
         $db = new Database(Config::get('database'));
+
+        $dashboardStats = AdminDashboardStats::get($db);
 
         // Total registered students.
         $totalStudents = (int) $db->query(
@@ -59,7 +62,8 @@ class AdminController
             'adminPage' => 'dashboard',
             'adminEmail' => $admin['email'],
             'totalStudents' => $totalStudents,
-            'todayAttendances' => $todayAttendances
+            'todayAttendances' => $todayAttendances,
+            'dashboardStats' => $dashboardStats,
         ]);
     }
 }

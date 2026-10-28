@@ -8,6 +8,11 @@ use RuntimeException;
 
 final class Session
 {
+    // Διατήρηση ανενεργών session files για 30 ημέρες.
+    // Δεν υπάρχει αυτόματο logout μετά από λίγα λεπτά.
+    private const STORAGE_RETENTION_SECONDS =
+    30 * 24 * 60 * 60;
+
     public static function start(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
@@ -27,6 +32,37 @@ final class Session
             'app.environment',
             'local'
         ) === 'production';
+
+        // Ξεχωριστός φάκελος sessions για το IFT.
+        // Ο φάκελος βρίσκεται εκτός public/.
+        $directory = dirname(__DIR__)
+            . '/storage/sessions';
+
+        if (
+            !is_dir($directory)
+            && !mkdir($directory, 0700, true)
+            && !is_dir($directory)
+        ) {
+            throw new RuntimeException(
+                'Cannot create private session directory.'
+            );
+        }
+
+        if (!is_writable($directory)) {
+            throw new RuntimeException(
+                'Private session directory is not writable.'
+            );
+        }
+
+        session_save_path($directory);
+
+        ini_set(
+            'session.gc_maxlifetime',
+            (string) self::STORAGE_RETENTION_SECONDS
+        );
+
+        ini_set('session.gc_probability', '1');
+        ini_set('session.gc_divisor', '100');
 
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
@@ -53,6 +89,7 @@ final class Session
         mixed $value
     ): void {
         self::start();
+
         $_SESSION[$key] = $value;
     }
 
@@ -68,6 +105,7 @@ final class Session
     public static function forget(string $key): void
     {
         self::start();
+
         unset($_SESSION[$key]);
     }
 

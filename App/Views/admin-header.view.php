@@ -10,6 +10,7 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
   default => 'Dashboard',
   'scanner' => 'Scanner εισόδου',
   'membership-plans' => 'Συνδρομές',
+  'settings' => 'Ρυθμίσεις',
 };
 ?>
 <!doctype html>
@@ -19,8 +20,10 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IFT MMA | Admin Panel</title>
-  <!-- Tailwind Play CDN is intended for prototyping. Compile Tailwind for production. -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Locally compiled Tailwind CSS -->
+  <link
+    rel="stylesheet"
+    href="/styles/admin-tailwind.css" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -132,7 +135,18 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
       <div>
         <div data-sidebar-section class="section-label">Σύστημα</div>
         <nav class="space-y-1">
-          <a href="#settings" class="nav-link" title="Ρυθμίσεις"><i data-lucide="settings-2"></i><span data-sidebar-label>Ρυθμίσεις</span></a>
+          <a
+            href="/admin/settings"
+            class="nav-link <?= (($adminPage ?? '') === 'settings')
+                              ? 'active'
+                              : '' ?>"
+            title="Ρυθμίσεις">
+            <i data-lucide="settings-2"></i>
+
+            <span data-sidebar-label>
+              Ρυθμίσεις
+            </span>
+          </a>
           <a
             href="/admin/administrators"
             class="nav-link"
@@ -325,6 +339,12 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
           'App/Views/admin/membership-plans-content.view.php'
         ); ?>
 
+      <?php elseif (($adminPage ?? 'dashboard') === 'settings'): ?>
+
+        <?php require basePath(
+          'App/Views/admin/settings-content.view.php'
+        ); ?>
+
       <?php else: ?>
 
 
@@ -352,50 +372,11 @@ $adminPageTitle = match ($adminPage ?? 'dashboard') {
           </div>
         </div>
         <!-- DASHBOARD KPI CARDS (sample data only) -->
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div class="rounded-2xl border border-white/[.08] bg-[#18181c] p-5">
-            <div class="mb-6 flex items-center justify-between">
-              <span class="text-xs font-bold text-zinc-400">Καταχωρισμένοι μαθητές</span><span class="rounded-xl bg-red-500/10 p-2.5 text-red-400"><i data-lucide="users-round" class="size-5"></i></span>
-            </div>
-            <div class="text-2xl font-extrabold">
-              <?= isset($totalStudents)
-                ? number_format((int) $totalStudents, 0, ',', '.')
-                : '—'
-              ?>
-            </div>
-            <p class="mt-2 text-xs text-zinc-500">
-              Σύνολο εγγραφών μαθητών
-            </p>
-          </div>
-          <div class="rounded-2xl border border-white/[.08] bg-[#18181c] p-5">
-            <div class="mb-6 flex items-center justify-between">
-              <span class="text-xs font-bold text-zinc-400">Σημερινές παρουσίες</span><span class="rounded-xl bg-violet-500/10 p-2.5 text-violet-400"><i data-lucide="scan-barcode" class="size-5"></i></span>
-            </div>
-            <div class="text-2xl font-extrabold">
-              <?= isset($todayAttendances)
-                ? number_format((int) $todayAttendances, 0, ',', '.')
-                : '—'
-              ?>
-            </div>
-            <p class="mt-2 text-xs text-zinc-500">
-              Καταγραφές για σήμερα (ώρα Ελλάδας)
-            </p>
-          </div>
-          <div class="rounded-2xl border border-white/[.08] bg-[#18181c] p-5">
-            <div class="mb-6 flex items-center justify-between">
-              <span class="text-xs font-bold text-zinc-400">Πληρωμές μήνα</span><span class="rounded-xl bg-emerald-500/10 p-2.5 text-emerald-400"><i data-lucide="wallet" class="size-5"></i></span>
-            </div>
-            <div class="text-2xl font-extrabold">—</div>
-            <p class="mt-2 text-xs text-zinc-500">Σύνολο καταχωρίσεων</p>
-          </div>
-          <div class="rounded-2xl border border-white/[.08] bg-[#18181c] p-5">
-            <div class="mb-6 flex items-center justify-between">
-              <span class="text-xs font-bold text-zinc-400">Personal bookings</span><span class="rounded-xl bg-sky-500/10 p-2.5 text-sky-400"><i data-lucide="calendar-check-2" class="size-5"></i></span>
-            </div>
-            <div class="text-2xl font-extrabold">—</div>
-            <p class="mt-2 text-xs text-zinc-500">Επερχόμενα ραντεβού</p>
-          </div>
-        </div>
+
+        <?php require basePath(
+          'App/Views/admin/dashboard-kpis.view.php'
+        ); ?>
+
         <div
           class="mt-5 rounded-2xl border border-dashed border-white/[.12] bg-white/[.015] px-6 py-14 text-center">
           <i

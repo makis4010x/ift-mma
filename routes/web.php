@@ -26,13 +26,6 @@ $router->get(
     'PageController@bookPersonalTraining'
 );
 
-
-// Development preview
-$router->get(
-    '/admin-preview',
-    'controllers/admin-preview.php'
-);
-
 // Admin authentication
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
@@ -175,4 +168,22 @@ $router->post(
 $router->post(
     '/admin/students/{id}/payments/void',
     'AdminStudentPaymentsController@voidPayment'
+);
+
+// School settings
+$router->get(
+    '/admin/settings',
+    'AdminSettingsController@index'
+);
+
+$router->post(
+    '/admin/settings',
+    'AdminSettingsController@update'
+);
+
+
+// Manual activity exception or return to automatic mode.
+$router->post(
+    '/admin/students/{id}/activity',
+    'AdminStudentActivityController@update'
 );

@@ -1,12 +1,43 @@
-/vendor
-/node_modules
-/config/db.php
+
+# PHP dependencies
+/vendor/
+
+# Node dependencies
+/node_modules/
+
+# Environment and secrets
 .env
 .env.*
 !.env.example
-.vscode
+*.local.php
+
+# Runtime data
+/storage/
+/uploads/
+/public/uploads/
+/tmp/
+/temp/
+
+# Logs and backups
+*.log
+*.bak
+*.dump
+*.db
+*.sqlite
+*.zip
+
+# Personal and financial data
+*.csv
+*.xls
+*.xlsx
+*.sql
+
+# Historical one-off repair scripts
+/scripts/resolve-*.php
+/scripts/remove-two-empty-students.php
+
+# Local editor files
+.vscode/
+.idea/
+Thumbs.db
 .DS_Store
-/config/database.local.php
-/storage/logs/
-/storage/imports/
-/config/scanner.local.php
