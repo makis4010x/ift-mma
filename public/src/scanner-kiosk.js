@@ -10,6 +10,54 @@ if (form && input && symbol && title && name && message) {
   let busy = false;
   let resetTimer;
 
+  // ========================================
+  // IFT Academy - MP3 Scanner Sounds
+  // ========================================
+
+  const paidSound = new Audio("/sounds/paid.mp3");
+  const unpaidSound = new Audio("/sounds/unpaid.mp3");
+
+  paidSound.preload = "auto";
+  unpaidSound.preload = "auto";
+
+  paidSound.volume = 1.0;
+  unpaidSound.volume = 1.0;
+
+  function playScanSound(result) {
+    // Stop any previously playing sound
+    paidSound.pause();
+    unpaidSound.pause();
+
+    paidSound.currentTime = 0;
+    unpaidSound.currentTime = 0;
+
+    // Only play payment sounds for recognized students
+    if (!["saved", "duplicate"].includes(result.status)) {
+      return;
+    }
+
+    let sound = null;
+
+    // Student has paid coverage
+    if (result.membership_status === "covered") {
+      sound = paidSound;
+    }
+
+    // Student has no paid coverage
+    else if (result.membership_status === "uncovered") {
+      sound = unpaidSound;
+    }
+
+    // Unknown or review status: no misleading payment sound
+    if (!sound) {
+      return;
+    }
+
+    sound.play().catch((error) => {
+      console.warn("IFT Scanner audio error:", error);
+    });
+  }
+
   // Membership coverage notification
   const coverageBox = document.createElement("div");
 
@@ -30,39 +78,66 @@ if (form && input && symbol && title && name && message) {
 
   message.insertAdjacentElement("afterend", coverageBox);
 
+  function formatGreekDate(value) {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    const [year, month, day] = value.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  // Coverage end is exclusive in our database.
+  function lastCoveredDay(value) {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    const date = new Date(`${value}T00:00:00Z`);
+    date.setUTCDate(date.getUTCDate() - 1);
+
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+
+    return `${day}/${month}/${date.getUTCFullYear()}`;
+  }
+
   function showCoverage(result) {
     coverageBox.style.display = "none";
     coverageBox.textContent = "";
 
+    // Show membership status on first and duplicate scans.
     if (!["saved", "duplicate"].includes(result.status)) {
       return;
     }
 
-    const status = result.membership_status;
-
-    if (status === "covered") {
-      coverageBox.style.backgroundColor = "#10291d";
-      coverageBox.style.borderColor = "#166534";
+    if (result.membership_status === "covered") {
+      coverageBox.style.backgroundColor = "#112c1d";
+      coverageBox.style.borderColor = "#15803d";
       coverageBox.style.color = "#86efac";
 
-      coverageBox.textContent =
-        "✓ ΕΝΕΡΓΗ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ\n" + (result.membership_notice || "");
-    } else if (status === "uncovered") {
-      coverageBox.style.backgroundColor = "#401719";
+      const until = lastCoveredDay(result.covered_until);
+      const renewal = formatGreekDate(result.covered_until);
+
+      coverageBox.textContent = until
+        ? `ΕΝΕΡΓΗ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ ΕΩΣ ${until}\nΕπόμενη ανανέωση: ${renewal}`
+        : "ΕΝΕΡΓΗ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ";
+    } else if (result.membership_status === "uncovered") {
+      coverageBox.style.backgroundColor = "#421719";
       coverageBox.style.borderColor = "#dc2626";
       coverageBox.style.color = "#fca5a5";
 
-      coverageBox.textContent =
-        "⚠ ΧΩΡΙΣ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ\n" +
-        (result.membership_notice || "Δεν υπάρχει ενεργή πληρωμένη κάλυψη.") +
-        "\nΗ είσοδος επιτρέπεται κανονικά.";
-    } else if (status === "review") {
+      const since = formatGreekDate(result.uncovered_since);
+
+      coverageBox.textContent = since
+        ? `ΧΩΡΙΣ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ ΑΠΟ ${since}\nΧρειάζεται ανανέωση συνδρομής.`
+        : "ΔΕΝ ΥΠΑΡΧΕΙ ΚΑΤΑΧΩΡΙΣΜΕΝΗ ΠΛΗΡΩΜΕΝΗ ΚΑΛΥΨΗ\nΧρειάζεται ενημέρωση συνδρομής.";
+    } else if (result.membership_status === "review") {
       coverageBox.style.backgroundColor = "#292929";
       coverageBox.style.borderColor = "#71717a";
       coverageBox.style.color = "#e4e4e7";
 
-      coverageBox.textContent =
-        "ⓘ ΑΠΑΙΤΕΙΤΑΙ ΕΛΕΓΧΟΣ ΣΥΝΔΡΟΜΗΣ\n" + (result.membership_notice || "");
+      coverageBox.textContent = "ΑΠΑΙΤΕΙΤΑΙ ΕΛΕΓΧΟΣ ΣΥΝΔΡΟΜΗΣ";
     } else {
       return;
     }
@@ -97,23 +172,52 @@ if (form && input && symbol && title && name && message) {
     clearTimeout(resetTimer);
 
     title.className = "";
-    name.textContent = result.name || "";
+    name.textContent = "";
+
+    const fullName = result.name || "Μαθητής";
 
     switch (result.status) {
       case "saved":
-        symbol.textContent = "✓";
-        title.textContent = "Καλώς ήρθες!";
-        title.className = "saved";
+        if (result.membership_status === "covered") {
+          symbol.textContent = "✓";
+          title.textContent = `Καλώς ήρθες, ${fullName}!`;
+          title.className = "saved";
 
-        message.textContent = "Η παρουσία καταχωρίστηκε.";
+          message.textContent = "Η είσοδος καταχωρίστηκε.";
+        } else if (result.membership_status === "uncovered") {
+          symbol.textContent = "!";
+          title.textContent = `Προσοχή, ${fullName}!`;
+          title.className = "error";
+
+          message.textContent = "Η είσοδος καταχωρίστηκε κανονικά.";
+        } else {
+          symbol.textContent = "✓";
+          title.textContent = `Καλώς ήρθες, ${fullName}!`;
+          title.className = "saved";
+
+          message.textContent =
+            "Η είσοδος καταχωρίστηκε. " + "Χρειάζεται έλεγχος της συνδρομής.";
+        }
         break;
 
       case "duplicate":
-        symbol.textContent = "!";
-        title.textContent = "Έχεις ήδη καταχωριστεί";
-        title.className = "duplicate";
+        name.textContent = fullName;
 
-        message.textContent = "Δεν προστέθηκε δεύτερη παρουσία.";
+        title.textContent = "Έχεις ήδη καταχωριστεί";
+
+        if (result.membership_status === "covered") {
+          symbol.textContent = "✓";
+          title.className = "saved";
+        } else if (result.membership_status === "uncovered") {
+          symbol.textContent = "!";
+          title.className = "error";
+        } else {
+          symbol.textContent = "!";
+          title.className = "duplicate";
+        }
+
+        message.textContent = "Δεν προστέθηκε δεύτερη παρουσία (εντός 6 ωρών).";
+
         break;
 
       case "unknown":
@@ -136,9 +240,10 @@ if (form && input && symbol && title && name && message) {
     }
 
     showCoverage(result);
+    playScanSound(result);
+
     input.value = "";
 
-    // Return to standby after 3.5 seconds.
     resetTimer = setTimeout(
       () => {
         if (result.status === "unauthorized") {
@@ -147,10 +252,7 @@ if (form && input && symbol && title && name && message) {
           reset();
         }
       },
-      ["uncovered", "review"].includes(result.membership_status) &&
-        ["saved", "duplicate"].includes(result.status)
-        ? 6000
-        : 3500,
+      result.status === "saved" ? 6000 : 3500,
     );
   }
 

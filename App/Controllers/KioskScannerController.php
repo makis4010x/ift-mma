@@ -63,6 +63,7 @@ final class KioskScannerController
         $membershipStatus = null;
         $membershipNotice = null;
         $coveredUntil = null;
+        $uncoveredSince = null;
 
         if (in_array($result, ['saved', 'duplicate'], true)) {
 
@@ -110,10 +111,14 @@ final class KioskScannerController
                             'Ενεργή πληρωμένη συνδρομή.';
                     } else {
                         $membershipStatus = 'uncovered';
+
+                        // Last paid coverage end (exclusive).
+                        // NULL if the student has never had paid coverage.
+                        $uncoveredSince = $summary['last_end'];
+
                         $membershipNotice =
                             'Δεν υπάρχει ενεργή πληρωμένη κάλυψη. '
-                            . 'Ενημερώστε τον μαθητή. '
-                            . 'Η είσοδος επιτρέπεται.';
+                            . 'Χρειάζεται ανανέωση συνδρομής.';
                     }
                 } catch (\Throwable $exception) {
                     error_log(
@@ -137,7 +142,8 @@ final class KioskScannerController
                 'name' => $name,
                 'membership_status' => $membershipStatus,
                 'membership_notice' => $membershipNotice,
-                'covered_until' => $coveredUntil
+                'covered_until' => $coveredUntil,
+                'uncovered_since' => $uncoveredSince
             ],
             JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
         );
