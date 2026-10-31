@@ -9,7 +9,7 @@ use Framework\Database;
 
 final class AttendanceRecorder
 {
-    public const DUPLICATE_MINUTES = 90;
+    public const DUPLICATE_MINUTES = 360;
 
     public static function recordScan(
         string $rawBarcode,

@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Support\AdminGuard;
 use App\Support\AttendanceRecorder;
+use App\Support\StudentPaymentSummary;
 use Framework\Config;
 use Framework\Csrf;
 use Framework\Database;
@@ -59,6 +60,9 @@ final class KioskScannerController
             : 'invalid';
 
         $name = '';
+        $membershipStatus = null;
+        $membershipNotice = null;
+        $coveredUntil = null;
 
         if (in_array($result, ['saved', 'duplicate'], true)) {
 
@@ -66,6 +70,7 @@ final class KioskScannerController
 
             $row = $db->query(
                 "SELECT
+                    s.id,
                     s.first_name,
                     s.last_name
                  FROM students s
@@ -85,13 +90,54 @@ final class KioskScannerController
                     $row['first_name'] . ' ' .
                         $row['last_name']
                 );
+
+
+                try {
+                    $summary = StudentPaymentSummary::load(
+                        $db,
+                        (int) $row['id']
+                    );
+
+                    if ($summary['review']) {
+                        $membershipStatus = 'review';
+                        $membershipNotice =
+                            'Χρειάζεται έλεγχος των στοιχείων συνδρομής. '
+                            . 'Η είσοδος επιτρέπεται.';
+                    } elseif ($summary['covered_until'] !== null) {
+                        $membershipStatus = 'covered';
+                        $coveredUntil = $summary['covered_until'];
+                        $membershipNotice =
+                            'Ενεργή πληρωμένη συνδρομή.';
+                    } else {
+                        $membershipStatus = 'uncovered';
+                        $membershipNotice =
+                            'Δεν υπάρχει ενεργή πληρωμένη κάλυψη. '
+                            . 'Ενημερώστε τον μαθητή. '
+                            . 'Η είσοδος επιτρέπεται.';
+                    }
+                } catch (\Throwable $exception) {
+                    error_log(
+                        'IFT scanner membership error: '
+                            . get_class($exception)
+                            . ' - '
+                            . $exception->getMessage()
+                    );
+
+                    $membershipStatus = 'review';
+                    $membershipNotice =
+                        'Δεν ήταν δυνατός ο έλεγχος συνδρομής. '
+                        . 'Η είσοδος επιτρέπεται.';
+                }
             }
         }
 
         echo json_encode(
             [
                 'status' => $result,
-                'name' => $name
+                'name' => $name,
+                'membership_status' => $membershipStatus,
+                'membership_notice' => $membershipNotice,
+                'covered_until' => $coveredUntil
             ],
             JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
         );
